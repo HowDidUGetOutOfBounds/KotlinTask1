@@ -1,2 +1,1 @@
-# KotlinTask1
-Kotlin easy demo app of usage fragmnets. Passing data throight them
+Simple app to show how to use fragment in kotlin. Passing data between fragmnrts by interface. Simple Demo app.
