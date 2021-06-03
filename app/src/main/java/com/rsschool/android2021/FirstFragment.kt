@@ -10,6 +10,8 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import java.lang.NumberFormatException
+import kotlin.math.max
 
 
 class FirstFragment : Fragment() {
@@ -25,7 +27,7 @@ class FirstFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        fragmentSendDataListener = context as  OnFragmentSendDataListener
+        fragmentSendDataListener = context as OnFragmentSendDataListener
     }
 
     override fun onCreateView(
@@ -40,6 +42,8 @@ class FirstFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         previousResult = view.findViewById(R.id.previous_result)
         generateButton = view.findViewById(R.id.generate)
+        val editTextViewMin = view.findViewById<EditText>(R.id.min_value)
+        val editTextViewMax = view.findViewById<EditText>(R.id.max_value)
 
         val result = arguments?.getInt(PREVIOUS_RESULT_KEY)
         previousResult?.text = "Previous result: ${result.toString()}"
@@ -47,34 +51,34 @@ class FirstFragment : Fragment() {
 
 
         generateButton?.setOnClickListener {
-            val editTextViewMin = view.findViewById<EditText>(R.id.min_value)
-            val editTextViewMax = view.findViewById<EditText>(R.id.max_value)
-            var min: Int = -1;
-            var max: Int = -1;
+
 
             //Getting min max values
-            if (!(editTextViewMax.text.toString() == "") && !(editTextViewMin.text.toString() == "")) {
-                min = editTextViewMin.text.toString().toInt()
-                max = editTextViewMax.text.toString().toInt()
-            }
+            var min = editTextViewMin.text.toString().toIntOrNull()
+            var max = editTextViewMax.text.toString().toIntOrNull()
+
 
             //if input is valid, then do stuff(open fragment and pass data), else show info in toast.
-            if(checkValidData(min, max))
-            {
-                fragmentSendDataListener?.onSendData(min, max);
-            }
-            else{
-                Toast.makeText(context, "Invalid input, dude. Try again!", Toast.LENGTH_SHORT).show()
+            if (checkValidData(min, max)) {
+                fragmentSendDataListener?.onSendData(min!!, max!!);
+            } else {
+                Toast.makeText(context, "Invalid input, dude. Try again!", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }
 
-    fun checkValidData(min: Int, max: Int) : Boolean{
+    fun checkValidData(min: Int?, max: Int?): Boolean {
         var valid = true;
-        if((min < 0) || (max < 0)){
+
+        if (max == null || min == null) {
+            return false
+        }
+
+        if ((min < 0) || (max < 0)) {
             valid = false;
         }
-        if(max < min){
+        if (max < min) {
             valid = false;
         }
         return valid
