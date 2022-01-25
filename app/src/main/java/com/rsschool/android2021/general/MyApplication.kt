@@ -2,22 +2,20 @@ package com.rsschool.android2021.general
 
 import android.app.Application
 import com.github.terrakok.cicerone.Cicerone
+import com.rsschool.android2021.DI.appModule
 import com.rsschool.android2021.presenter.SimplePresenter
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
 class MyApplication : Application() {
-    private val cicerone = Cicerone.create()
-    val router get() = cicerone.router
-    val navigatorHolder get() = cicerone.getNavigatorHolder()
-    val presenter = SimplePresenter(router)
-
 
     override fun onCreate() {
         super.onCreate()
-        INSTANCE = this
+
+        startKoin {
+            androidContext(this@MyApplication)
+            modules(appModule)
+        }
     }
 
-    companion object{
-        internal lateinit var INSTANCE: MyApplication
-            private set
-    }
 }

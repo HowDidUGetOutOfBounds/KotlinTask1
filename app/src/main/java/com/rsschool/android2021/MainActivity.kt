@@ -12,6 +12,7 @@ import com.github.terrakok.cicerone.androidx.AppNavigator
 import com.rsschool.android2021.general.MyApplication
 import com.rsschool.android2021.general.Screens.BoundsInputsScreen
 import com.rsschool.android2021.presenter.SimplePresenter
+import org.koin.android.ext.android.inject
 
 
 class MainActivity : AppCompatActivity(), OnFragmentSendDataListener, OnFragmentBackDataListener {
@@ -24,16 +25,12 @@ class MainActivity : AppCompatActivity(), OnFragmentSendDataListener, OnFragment
         }
     }
 
-    private lateinit var navigatorHolder: NavigatorHolder
-    private lateinit var presenter: SimplePresenter
+    val navigatorHolder: NavigatorHolder by inject()
+    val presenter: SimplePresenter by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        //TODO: Manual DI, will be removed with koin
-        navigatorHolder = (application as MyApplication).navigatorHolder
-        presenter = (application as MyApplication).presenter
 
         navigator.applyCommands(arrayOf<Command>(Replace(BoundsInputsScreen(0))))
     }
